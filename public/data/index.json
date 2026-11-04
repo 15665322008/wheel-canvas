@@ -1,0 +1,138 @@
+{
+ "schema": "wheel-canvas.index.v1",
+ "generatedAt": "2026-11-04T08:26:13.257Z",
+ "source": "https://api.squeekchain.com/v1/measurement/runs",
+ "installationId": "stream-game-sepolia-test-20261025-01",
+ "coverageStartAt": "2026-10-26T21:16:49.503258Z",
+ "coverageThroughAt": "2026-11-04T08:25:58.826253Z",
+ "mmPerPassage": 878,
+ "lifetime": {
+  "acceptedWorkUnits": "92730",
+  "observedDistanceMm": "81416940",
+  "activeDayCount": 9,
+  "settledBlockCount": "8430",
+  "settlementCount": "1214",
+  "coverageBps": 10000,
+  "firstObservedAt": "2026-10-26T13:50:00.000Z",
+  "settledWorkUnits": "92730"
+ },
+ "records": {
+  "mostWorkHalfHour": {
+   "value": "1827",
+   "occurredAt": "2026-10-27T22:00:00.000Z",
+   "coverage": "complete"
+  },
+  "mostWorkUtcDay": {
+   "value": "13297",
+   "occurredAt": "2026-10-29T12:00:00.000Z",
+   "coverage": "complete"
+  },
+  "maximumDailyDistanceMm": {
+   "value": "11674766",
+   "occurredAt": "2026-10-29T12:00:00.000Z",
+   "coverage": "complete"
+  },
+  "peakObservedRpmMilli": {
+   "value": "111256",
+   "occurredAt": "2026-10-28T21:28:20.307Z",
+   "coverage": "complete"
+  },
+  "peakObservedSpeedMmPerSecond": {
+   "value": "1628",
+   "occurredAt": "2026-10-28T21:28:20.307Z",
+   "coverage": "complete"
+  },
+  "longestActiveWindowMinutes": {
+   "value": "180",
+   "occurredAt": "2026-10-28T22:30:00.000Z",
+   "coverage": "complete"
+  },
+  "longestActiveDayStreak": {
+   "value": "9",
+   "occurredAt": "2026-10-26T12:00:00.000Z",
+   "coverage": "partial"
+  }
+ },
+ "days": [
+  {
+   "date": "2026-10-26",
+   "passages": 7280,
+   "segments": 516,
+   "firstAt": "2026-10-26T21:16:49.503Z",
+   "lastAt": "2026-10-26T23:56:19.850Z",
+   "distanceMm": 9817796
+  },
+  {
+   "date": "2026-10-27",
+   "passages": 7548,
+   "segments": 582,
+   "firstAt": "2026-10-27T02:44:36.959Z",
+   "lastAt": "2026-10-27T22:34:00.018Z",
+   "distanceMm": 9562298
+  },
+  {
+   "date": "2026-10-28",
+   "passages": 12468,
+   "segments": 1130,
+   "firstAt": "2026-10-28T00:42:18.379Z",
+   "lastAt": "2026-10-28T23:59:59.799Z",
+   "distanceMm": 9295386
+  },
+  {
+   "date": "2026-10-29",
+   "passages": 12474,
+   "segments": 1154,
+   "firstAt": "2026-10-29T00:00:00.706Z",
+   "lastAt": "2026-10-29T23:59:59.547Z",
+   "distanceMm": 11674766
+  },
+  {
+   "date": "2026-10-30",
+   "passages": 13793,
+   "segments": 1316,
+   "firstAt": "2026-10-30T00:00:00.382Z",
+   "lastAt": "2026-10-30T23:52:33.204Z",
+   "distanceMm": 11028558
+  },
+  {
+   "date": "2026-10-31",
+   "passages": 9013,
+   "segments": 839,
+   "firstAt": "2026-10-31T00:02:37.384Z",
+   "lastAt": "2026-10-31T23:02:28.207Z",
+   "distanceMm": 7467390
+  },
+  {
+   "date": "2026-11-01",
+   "passages": 8811,
+   "segments": 834,
+   "firstAt": "2026-11-01T01:33:22.425Z",
+   "lastAt": "2026-11-01T22:47:42.020Z",
+   "distanceMm": 7887952
+  },
+  {
+   "date": "2026-11-02",
+   "passages": 11017,
+   "segments": 1065,
+   "firstAt": "2026-11-02T00:37:58.729Z",
+   "lastAt": "2026-11-02T23:59:59.223Z",
+   "distanceMm": 7660550
+  },
+  {
+   "date": "2026-11-03",
+   "passages": 7056,
+   "segments": 693,
+   "firstAt": "2026-11-03T00:00:00.130Z",
+   "lastAt": "2026-11-03T23:59:59.664Z",
+   "distanceMm": 7022244
+  },
+  {
+   "date": "2026-11-04",
+   "passages": 3270,
+   "segments": 337,
+   "firstAt": "2026-11-04T00:00:07.992Z",
+   "lastAt": "2026-11-04T05:28:50.506Z",
+   "distanceMm": null
+  }
+ ]
+}

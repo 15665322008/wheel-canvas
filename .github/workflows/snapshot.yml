@@ -1,0 +1,37 @@
+name: Daily wheel snapshot
+
+on:
+  schedule:
+    - cron: '7 0 * * *'   # 00:07 UTC, just after the UTC day closes
+    - cron: '7 12 * * *'  # midday refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Crawl new wheel passages (incremental, ≤ 2 req/s)
+        run: npm run snapshot
+      - name: Commit data
+        run: |
+          if [ -n "$(git status --porcelain public/data)" ]; then
+            git config user.name  "wheel-canvas-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/data
+            git commit -m "data: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          else
+            echo "No new data."
+          fi
