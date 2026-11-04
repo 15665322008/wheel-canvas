@@ -1,7 +1,7 @@
 # Wheel Canvas / 仓鼠画布
 
 **Every turn of Squeektoshi's wheel paints a dot.**
-Live site: https://mstrsqueek.xyz *(domain pending)*
+Live site: https://mstrsqueek.xyz · Source: https://github.com/15665322008/wheel-canvas
 
 Wheel Canvas turns the real wheel runs of Squeektoshi, the hamster behind
 [Squeekchain](https://squeekchain.com), into deterministic generative art. Each

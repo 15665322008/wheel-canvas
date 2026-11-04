@@ -4,7 +4,7 @@ import { dayScene, runScene, drawScene, sceneToSVG, PALETTES, ramp, V_MIN, V_MAX
 import { loadIndex, loadDay, getDay, knownDates, startLive, onData, live, wheelState, getIndex } from './data.js';
 import { t, getLang, setLang, ago } from './i18n.js';
 
-const REPO_URL = 'https://github.com/REPLACE_ME/wheel-canvas'; // set after the public repo is created
+const REPO_URL = 'https://github.com/15665322008/wheel-canvas';
 const FIRST_DAY = '2026-10-26';
 const params = new URLSearchParams(location.search);
 const OVERLAY = params.get('overlay') === '1';
