@@ -3,6 +3,9 @@ import { analyzeDay, isoDay, dayStartMs, DEFAULT_MM_PER_PASSAGE, RUN_BREAK_MS, R
 import { dayScene, runScene, drawScene, sceneToSVG, PALETTES, ramp, V_MIN, V_MAX } from './art.js';
 import { loadIndex, loadDay, getDay, knownDates, startLive, onData, live, wheelState, getIndex } from './data.js';
 import { t, getLang, setLang, ago } from './i18n.js';
+import { viewPredict } from './predict.js';
+import { viewStudio } from './studio.js';
+import { overlay as renderOverlay } from './overlay.js';
 
 const REPO_URL = 'https://github.com/15665322008/wheel-canvas';
 const FIRST_DAY = '2026-10-26';
@@ -75,7 +78,7 @@ function legendHTML() {
 
 // ---------- layout ----------
 function shell(content, active) {
-  const nav = [['#/', 'navToday', 'today'], ['#/gallery', 'navGallery', 'gallery'], ['#/how', 'navHow', 'how']]
+  const nav = [['#/', 'navToday', 'today'], ['#/gallery', 'navGallery', 'gallery'], ['#/predict', 'navPredict', 'predict'], ['#/studio', 'navStudio', 'studio'], ['#/how', 'navHow', 'how']]
     .map(([href, k, id]) => `<a href="${href}" class="${active === id ? 'on' : ''}">${esc(t(k))}</a>`).join('');
   app.innerHTML = '';
   app.append(h(`
@@ -91,7 +94,7 @@ function shell(content, active) {
   <footer class="foot">
     <p><b>${esc(t('footer'))}</b></p>
     <p>${esc(t('footerData'))} ${esc(t('utcNote'))}</p>
-    <p class="foot-links"><a href="${REPO_URL}" rel="noopener">${esc(t('source'))}</a> · <a href="https://docs.squeekchain.com/developers/api/" rel="noopener">API</a> · <a href="#/how">${esc(t('navHow'))}</a> · <a href="#/how#overlay">${esc(t('navOverlay'))}</a> · MIT</p>
+    <p class="foot-links"><a href="${REPO_URL}" rel="noopener">${esc(t('source'))}</a> · <a href="https://docs.squeekchain.com/developers/api/" rel="noopener">API</a> · <a href="#/how">${esc(t('navHow'))}</a> · <a href="#/studio">${esc(t('navOverlay'))}</a> · MIT</p>
   </footer>`));
   $('#lang').onclick = () => { setLang(getLang() === 'zh' ? 'en' : 'zh'); route(); };
 }
@@ -304,7 +307,7 @@ async function viewRun(date, idx) {
 
 async function viewHow() {
   const zh = getLang() === 'zh';
-  const overlayUrl = `${location.origin}/?overlay=1${zh ? '&lang=zh' : ''}`;
+  const overlayUrl = `${location.origin}/?overlay=1&layout=full&size=320&theme=transparent&lang=${zh ? 'zh' : 'en'}`;
   const S = zh ? HOW_ZH : HOW_EN;
   shell(`<article class="prose">
     <p class="kicker">${esc(t('navHow'))}</p>
@@ -317,6 +320,7 @@ async function viewHow() {
     <p>${esc(t('overlayBody'))}</p>
     <div class="copyrow"><code id="ovUrl">${esc(overlayUrl)}</code><button class="btn" id="copyOv">${esc(t('copy'))}</button></div>
     <p class="muted">${S.overlayOpts}</p>
+    <p><a class="btn primary" href="#/studio">${esc(t('stOpenStudio'))} →</a></p>
     ${S.data}
   </article>`, 'how');
   $('#copyOv').onclick = async () => { try { await navigator.clipboard.writeText(overlayUrl); $('#copyOv').textContent = t('copied'); } catch { /* ignore */ } };
@@ -351,7 +355,14 @@ const HOW_EN = {
   <p>Each run gets its own 1200 × 630 card: a dot-matrix equaliser. The run's duration is split into 56 equal columns; column height is the average speed in that slice; the top dot is highlighted; pink dots under the baseline mark stumbles.</p>
   <h2>5 · Exports</h2>
   <p>The renderer produces a list of dots and labels. The same list is drawn on the screen, rasterised into the PNG (2×) and serialised into the SVG, so downloads always match what you see.</p>`,
-  overlayOpts: 'Options: <code>&amp;lang=zh</code> or <code>&amp;lang=en</code>, <code>&amp;size=320</code> (painting width in px), <code>&amp;stats=0</code> (painting only). Suggested OBS source size: 360 × 470.',
+  overlayOpts: `Options:
+    <code>layout=</code> <code>canvas</code> (painting only) · <code>full</code> (painting + stats, default) · <code>bar</code> (compact stats bar) · <code>ticker</code> (round countdown);
+    <code>size=160..1080</code> painting width; <code>w=240..1920</code> bar/ticker width;
+    <code>theme=</code> <code>transparent</code> · <code>dark</code> · <code>light</code>;
+    <code>accent=F2C230</code> (hex, no #);
+    <code>stats=status,rpm,turns,dist,round</code> (any order/subset);
+    <code>lang=zh|en</code>.
+    Old links keep working: <code>stats=0</code> = painting only. The <a href="#/studio">Overlay Studio</a> builds the URL, previews it live and tells you the exact OBS source size.`,
   data: `<h2>Data &amp; respect for the API</h2>
   <p>A GitHub Action runs <code>scripts/snapshot.mjs</code> every day and commits compact JSON to <code>/data</code>, so the gallery loads from static files. In the browser only the newest segments are fetched live (one page at a time, ≥ 0.7 s apart, only while the tab is visible), and <code>/v1/status</code> is polled about every 10 s. The data comes from Squeekchain's Sepolia testnet deployment and is device evidence, not certified core work: it is for display only.</p>`,
 };
@@ -378,7 +389,14 @@ const HOW_ZH = {
   <p>每次跑步都有一张 1200 × 630 的卡片：点阵均衡器。把这次跑步的时长平均分成 56 列，每列高度是这段时间的平均速度，顶端的点会高亮；基线下方的粉色点表示停顿。</p>
   <h2>5 · 导出</h2>
   <p>渲染器先生成一组点和文字，同一组数据既画在屏幕上，也栅格化成 PNG（2 倍），也序列化成 SVG，所以下载的文件永远和你看到的一致。</p>`,
-  overlayOpts: '参数：<code>&amp;lang=zh</code> 或 <code>&amp;lang=en</code>，<code>&amp;size=320</code>（画作宽度，像素），<code>&amp;stats=0</code>（只显示画）。建议 OBS 源尺寸：360 × 470。',
+  overlayOpts: `参数：
+    <code>layout=</code> <code>canvas</code>（只有画）· <code>full</code>（画 + 数据，默认）· <code>bar</code>（紧凑数据条）· <code>ticker</code>（轮次倒计时条）；
+    <code>size=160..1080</code> 画作宽度；<code>w=240..1920</code> 数据条 / 倒计时条宽度；
+    <code>theme=</code> <code>transparent</code>（透明）· <code>dark</code>（深色）· <code>light</code>（浅色）；
+    <code>accent=F2C230</code>（强调色，十六进制，不带 #）；
+    <code>stats=status,rpm,turns,dist,round</code>（任选、任意顺序）；
+    <code>lang=zh|en</code>。
+    旧链接照常可用：<code>stats=0</code> = 只显示画。<a href="#/studio">直播叠加工作室</a>可以可视化生成链接、实时预览，并给出准确的 OBS 源尺寸。`,
   data: `<h2>数据与对 API 的尊重</h2>
   <p>GitHub Action 每天运行 <code>scripts/snapshot.mjs</code>，把压缩后的 JSON 提交到 <code>/data</code>，画廊直接读静态文件。浏览器只实时拉取最新的片段（一次一页，间隔至少 0.7 秒，只在页面可见时），<code>/v1/status</code> 大约每 10 秒查询一次。数据来自 Squeekchain 的 Sepolia 测试网部署，是设备证据而非核心认证的工作量，仅供展示。</p>`,
 };
@@ -387,29 +405,13 @@ function viewNotFound() {
   shell(`<section class="page-head"><h1>404</h1><p class="lead"><a href="#/">← ${esc(t('navToday'))}</a></p></section>`, '');
 }
 
-// ---------- overlay ----------
-async function overlay() {
-  document.documentElement.classList.add('overlay');
-  const size = Math.max(160, Math.min(1080, Number(params.get('size')) || 320));
-  const showStats = params.get('stats') !== '0';
-  app.innerHTML = `<div class="ov" style="width:${size}px"><canvas id="ovArt" style="width:${size}px;height:${size}px"></canvas>${showStats ? '<div class="ov-bar" id="ovBar"></div>' : ''}</div>`;
-  const date = () => today();
-  await loadDay(date());
-  const render = () => {
-    const d = date();
-    const tt = getDay(d), a = analysis(d);
-    const scene = dayScene(d, tt, a, { nowMs: Date.now(), running: wheelState().key === 'running', transparent: true, bare: true });
-    drawScene($('#ovArt'), scene, size);
-    if (showStats) {
-      const b = stateBadge(), m = b.s.m;
-      $('#ovBar').innerHTML = `${b.html}<span>${fmt(a.passages)} ${esc(t('passages'))}</span><span>${km(a.distanceM)}</span>${m && m.rpmMilli ? `<span>${fmt(m.rpmMilli / 1000, 0)} rpm</span>` : ''}<span class="ov-brand">${esc(t('brand'))}</span>`;
-    }
-  };
-  render();
-  onData(throttle(render, 1000));
-  setInterval(render, 30_000);
-  startLive();
+// ---------- overlay + feature context ----------
+// Helpers handed to the views that live in their own modules (predict.js, studio.js, overlay.js).
+function ctx() {
+  return { shell, $, esc, fmt, km, stat, stateBadge, exportPNG, exportSVG, xIntent, siteUrl, throttle, analysis, today, params,
+    setCleanup: (fn) => { const prev = unsub; unsub = () => { prev && prev(); fn(); }; } };
 }
+const overlay = () => renderOverlay(ctx());
 
 // ---------- router ----------
 function throttle(fn, ms) {
@@ -430,6 +432,8 @@ async function route() {
     if (!parts.length) await viewHome();
     else if (parts[0] === 'gallery') await viewGallery();
     else if (parts[0] === 'how') await viewHow();
+    else if (parts[0] === 'predict') await viewPredict(ctx(), parts.slice(1));
+    else if (parts[0] === 'studio') viewStudio(ctx());
     else if (parts[0] === 'day' && parts[1]) await viewDay(parts[1]);
     else if (parts[0] === 'run' && parts[1] && parts[2]) await viewRun(parts[1], parts[2]);
     else viewNotFound();

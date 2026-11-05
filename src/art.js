@@ -218,3 +218,90 @@ export function sceneToSVG(scene, title = 'Wheel Canvas') {
   out.push('</svg>');
   return out.join('\n');
 }
+
+/**
+ * Prediction painting for one 10-minute round.
+ *  angle  = time inside the round (start at top, clockwise)
+ *  radius = running speed, as in the day painting
+ *  outer gauge = actual work (filled) vs the visitor's guess (white marker); the gap is pink
+ *  palette + ripple = how far the guess was: calm and golden when close, wavy and cool when far
+ *  bullseye (>= 95 %) = concentric golden rings in the centre
+ */
+export function predictionScene(p, t, v, opts = {}) {
+  const W = 1080, H = 1080, G = 54, C = W / G;
+  const cx = 27, cy = 25.2, rIn = 6.2, rOut = 17.2, rG = 19.6;
+  const dur = p.end - p.start;
+  const acc = p.acc ?? 0;
+  const bull = acc >= 95;
+  const pal = PALETTES[acc >= 95 ? 0 : acc >= 80 ? 4 : acc >= 60 ? 3 : acc >= 35 ? 1 : 2];
+  const seed = p.seed >>> 0;
+  const phase = ((seed % 1000) / 1000) * Math.PI * 2;
+  const freq = 0.8 + ((seed >>> 10) % 7) * 0.12;
+  const wobble = Math.min(1, (100 - acc) / 60); // 0 when exact, 1 when far
+  const prims = [];
+  const ink = new Float64Array(G * G);
+  for (let i = 0; i < t.length; i++) {
+    const th = (2 * Math.PI * (t[i] - p.start)) / dur - Math.PI / 2;
+    const r = Number.isNaN(v[i]) ? rIn + 0.6 : rIn + 0.9 + vFrac(v[i]) * (rOut - rIn - 0.9);
+    for (const [dr, wgt] of BRUSH) {
+      const gx = Math.round(cx - 0.5 + (r + dr) * Math.cos(th)), gy = Math.round(cy - 0.5 + (r + dr) * Math.sin(th));
+      if (gx >= 0 && gx < G && gy >= 0 && gy < G) ink[gy * G + gx] += wgt;
+    }
+  }
+  const K = 7; // turns per cell for a full dot (a round is ~1/144 of a day)
+  for (let gy = 0; gy < G; gy++) for (let gx = 0; gx < G; gx++) {
+    const idx = gy * G + gx;
+    const x = (gx + 0.5) * C, y = (gy + 0.5) * C;
+    const d = Math.hypot(gx + 0.5 - cx, gy + 0.5 - cy);
+    if (ink[idx] > 0) {
+      const w = Math.min(1, (ink[idx] * (d / rOut)) / K);
+      prims.push({ t: 'c', x, y, r: C * (0.16 + 0.3 * Math.sqrt(w)), fill: ramp(pal.stops, (d - rIn) / (rOut - rIn)), a: 0.45 + 0.55 * Math.sqrt(w) });
+      continue;
+    }
+    if (d < rIn - 0.4) {
+      if (bull) {
+        const ring = Math.round(d * 1.15) % 2 === 0;
+        prims.push({ t: 'c', x, y, r: C * (ring ? 0.34 : 0.14), fill: ring ? (d < 1.2 ? pal.stops[4] : pal.stops[3]) : pal.stops[1], a: ring ? 1 : 0.8 });
+      } else prims.push({ t: 'c', x, y, r: C * 0.08, fill: DOT_IDLE, a: 1 });
+      continue;
+    }
+    const rip = 0.5 + 0.5 * Math.sin(d * freq * 1.7 + phase + Math.atan2(gy - cy, gx - cx) * (1 + (seed % 3)));
+    prims.push({ t: 'c', x, y, r: C * (0.1 + wobble * 0.1 * rip), fill: wobble > 0.5 && rip > 0.8 ? '#2c2f45' : DOT_IDLE, a: 1 });
+  }
+  // gauge ring: actual (filled), error arc (pink), guess marker (white)
+  const scale = niceCeil(Math.max(p.actual || 0, p.guess || 0, 40) * 1.18);
+  const N = 120, fa = (p.actual || 0) / scale, fg = (p.guess || 0) / scale;
+  for (let k = 0; k < N; k++) {
+    const f = k / N, th = 2 * Math.PI * f - Math.PI / 2;
+    const x = (cx + rG * Math.cos(th)) * C, y = (cy + rG * Math.sin(th)) * C;
+    let fill = '#34343f', r = C * 0.16, a = 1;
+    if (f < fa) { fill = ramp(pal.stops, 0.35 + 0.65 * (f / Math.max(fa, 1e-9))); r = C * 0.3; }
+    if (f >= Math.min(fa, fg) && f < Math.max(fa, fg)) { fill = '#F06BAE'; r = C * 0.24; a = 0.9; }
+    prims.push({ t: 'c', x, y, r, fill, a });
+  }
+  const marker = (f, fill, rr) => { const th = 2 * Math.PI * f - Math.PI / 2; prims.push({ t: 'c', x: (cx + rG * Math.cos(th)) * C, y: (cy + rG * Math.sin(th)) * C, r: C * rr, fill, a: 1 }); };
+  marker(Math.min(fa, 0.999), pal.stops[4], 0.52);
+  marker(Math.min(fg, 0.999), '#ffffff', 0.44);
+  // minute ticks
+  for (let m = 0; m < 10; m++) {
+    const th = (2 * Math.PI * m) / 10 - Math.PI / 2, r = rG + 1.9, major = m % 5 === 0;
+    prims.push({ t: 'c', x: (cx + r * Math.cos(th)) * C, y: (cy + r * Math.sin(th)) * C, r: C * (major ? 0.2 : 0.11), fill: major ? '#9A9AA6' : '#55555f', a: 1 });
+  }
+  if (!bull && !opts.bare) {
+    prims.push({ t: 'text', x: cx * C, y: cy * C + 22, s: 92, fill: pal.stops[3], txt: `${Math.round(acc)}%`, anchor: 'middle', font: 'display', weight: 600 });
+  }
+  if (!opts.bare) {
+    const hm = (ms) => new Date(ms).toISOString().slice(11, 16);
+    const date = new Date(p.start).toISOString().slice(0, 10);
+    prims.push({ t: 'text', x: C * 1.6, y: H - C * 2.1, s: 30, fill: '#E6E6EC', txt: `ROUND #${p.round} · ${date} ${hm(p.start)}–${hm(p.end)} UTC`, anchor: 'start', font: 'display', weight: 600 });
+    prims.push({ t: 'text', x: C * 1.6, y: H - C * 0.9, s: 15, fill: '#9A9AA6', txt: `GUESS ${fmtInt(p.guess)} · ACTUAL ${fmtInt(p.actual)} TURNS · ${acc.toFixed(1)}%${bull ? ' · BULLSEYE' : ''}`, anchor: 'start', font: 'mono' });
+    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 2.1, s: 15, fill: '#9A9AA6', txt: `WHEEL CANVAS · PREDICTION · ${pal.name.toUpperCase()}`, anchor: 'end', font: 'mono' });
+    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 0.9, s: 15, fill: '#6E6E7A', txt: `#${(seed >>> 0).toString(16).padStart(8, '0')}`, anchor: 'end', font: 'mono' });
+  }
+  return { w: W, h: H, bg: BG, prims, palette: pal };
+}
+function niceCeil(x) {
+  const p = 10 ** Math.floor(Math.log10(Math.max(1, x)));
+  for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * p >= x) return m * p;
+  return 10 * p;
+}

@@ -97,7 +97,15 @@ async function main() {
   console.log(cursor ? `Resuming from saved cursor` : `Full crawl from the first segment`);
   for (;;) {
     const url = `${API}/v1/measurement/runs?limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`;
-    const page = await getJSON(url);
+    let page;
+    try { page = await getJSON(url); }
+    catch (e) {
+      // A cursor from a previous installation (the API was re-deployed) is rejected with
+      // 400 invalid_cursor. Keep the days already on disk and start the new installation
+      // from its first page; segment ids are unique, so nothing is double counted.
+      if (cursor && /^400 /.test(e.message)) { console.warn('  saved cursor rejected, restarting from the first page'); cursor = null; continue; }
+      throw e;
+    }
     pages++;
     meta = page;
     for (const it of page.items) {
@@ -143,10 +151,14 @@ async function main() {
   let stats = null;
   try { stats = await getJSON(`${API}/v1/measurement/stats?range=30d`); } catch (e) { console.warn('stats failed', e.message); }
   const lifetime = stats?.lifetime;
-  const mmPerPassage = lifetime ? Number(lifetime.observedDistanceMm) / Number(lifetime.acceptedWorkUnits) : null;
+  const prevIndex = await readJSON(path.join(OUT, 'index.json'), {});
+  let mmPerPassage = lifetime ? Number(lifetime.observedDistanceMm) / Number(lifetime.acceptedWorkUnits) : null;
+  // A fresh installation reports 0 / 0: keep the last good circumference estimate.
+  if (!Number.isFinite(mmPerPassage) || mmPerPassage < 300 || mmPerPassage > 2000) mmPerPassage = prevIndex.mmPerPassage || 878;
   const dayDistance = {};
   for (const d of stats?.activity?.days || []) if (d.distanceMm != null) dayDistance[d.date] = Number(d.distanceMm);
-  for (const row of index) row.distanceMm = dayDistance[row.date] ?? null;
+  const prevDistance = Object.fromEntries((prevIndex.days || []).map((d) => [d.date, d.distanceMm]));
+  for (const row of index) row.distanceMm = dayDistance[row.date] ?? prevDistance[row.date] ?? null;
 
   const out = {
     schema: 'wheel-canvas.index.v1',
@@ -156,8 +168,8 @@ async function main() {
     coverageStartAt: meta?.coverageStartAt,
     coverageThroughAt: meta?.coverageThroughAt,
     mmPerPassage,
-    lifetime: lifetime || null,
-    records: stats?.records || null,
+    lifetime: Number(lifetime?.acceptedWorkUnits) > 0 ? lifetime : prevIndex.lifetime || null,
+    records: Number(lifetime?.acceptedWorkUnits) > 0 ? stats?.records || null : prevIndex.records || null,
     days: index,
   };
   await writeFile(path.join(OUT, 'index.json'), JSON.stringify(out, null, 1));

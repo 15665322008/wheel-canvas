@@ -23,7 +23,16 @@ one dot-grid picture per UTC day. The same data always gives the same painting.
 - **Run portraits.** A 1200×630 dot-matrix equalizer for each run.
 - **Exports.** PNG (2×) and SVG of every painting, plus *Share on X*.
 - **How it's drawn.** A full explanation of the algorithm.
-- **OBS overlay.** `/?overlay=1` has a transparent background. Options: `&lang=zh|en`, `&size=160..1080`, `&stats=0`.
+- **Prediction Painting / 个人预测画** (`#/predict`). Guess how many turns the current 10-minute Squeekchain round will end with (slider + number box, with a hint from recent rounds). The guess locks on submit and is stored only in this browser, one per round. When the round closes, the site counts the round's real passages, scores your accuracy, and paints a picture from the passage timestamps plus your guess. Rounds within 5% get a bullseye. Each result has PNG download, *Share on X* and a permalink. Your history shows thumbnails, average accuracy, streak and bullseyes. Pending guesses resolve when you come back.
+- **Overlay Studio / 直播叠加工作室** (`#/studio`). Pick a layout, size, theme, accent colour, language and the stats to show. You get a live preview, a copyable URL, the exact OBS source size and setup steps.
+- **OBS overlay.** `/?overlay=1`:
+  - `layout=canvas|full|bar|ticker`
+  - `size=160..1080` sets the painting width; `w=240..1920` sets the bar/ticker width
+  - `theme=transparent|dark|light`
+  - `accent=RRGGBB`
+  - `stats=status,rpm,turns,dist,round`
+  - `lang=zh|en`
+  - Old links keep working: `&stats=0` shows the painting only, and `&size=` and `&lang=` behave as before.
 - **中文 / English toggle.** Also settable with `?lang=`.
 - **Responsive.** No wallet, no sign-in, no forms, no tracking.
 
@@ -41,10 +50,12 @@ One passage ≈ one wheel turn ≈ 878 mm (lifetime observed distance ÷ accepte
 
 ## Data
 
-- Source: `https://api.squeekchain.com` (`/v1/status`, `/v1/measurement/runs`, `/v1/measurement/stats`). This is public, needs no key, and is Sepolia-testnet device evidence for display only.
+- Source: `https://api.squeekchain.com` (`/v1/status`, `/v1/measurement/runs`, `/v1/measurement/stats`, `/v1/measurement/blocks`). This is public, needs no key, and is Sepolia-testnet device evidence for display only.
 - `scripts/snapshot.mjs` crawls runs incrementally (one page every 650 ms, under the 2 req/s limit). It writes compact per-day JSON to `public/data/days/YYYY-MM-DD.json` plus `public/data/index.json` and `state.json`.
 - `.github/workflows/snapshot.yml` runs it twice a day and commits `public/data`.
 - In the browser, the site loads the snapshot and then fetches only newer runs from the live API. If no snapshot exists, it falls back to crawling the API directly.
+- Rounds use `roundSchedule` (genesis and duration) from `/v1/measurement/blocks`. The live open-round work is `builder.queued.openRoundWorkUnits` from `/v1/status`. The 7-day round hint uses `rounds` from `/v1/measurement/stats?range=7d` when it is filled in, and otherwise falls back to the local passage data.
+- Re-deploys: when the API starts a new installation, the old snapshot cursor is rejected (`400 invalid_cursor`). Both the browser and `snapshot.mjs` then restart from the first page of the new installation and keep the earlier days.
 
 ## Develop
 

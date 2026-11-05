@@ -1,10 +1,10 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-04T19:41:33.601Z",
+ "generatedAt": "2026-11-05T01:08:21.352Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
- "installationId": "stream-game-sepolia-test-20261025-01",
- "coverageStartAt": "2026-10-26T21:16:49.503258Z",
- "coverageThroughAt": "2026-11-04T19:41:27.540706Z",
+ "installationId": "sepolia-core-sepolia-20261103",
+ "coverageStartAt": null,
+ "coverageThroughAt": null,
  "mmPerPassage": 953.7278550630864,
  "lifetime": {
   "acceptedWorkUnits": "92730",
@@ -132,7 +132,7 @@
    "segments": 337,
    "firstAt": "2026-11-04T00:00:07.992Z",
    "lastAt": "2026-11-04T05:28:50.506Z",
-   "distanceMm": 7022244
+   "distanceMm": 0
   }
  ]
 }

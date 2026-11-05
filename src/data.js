@@ -18,7 +18,7 @@ const listeners = new Set();
 export const onData = (fn) => (listeners.add(fn), () => listeners.delete(fn));
 const emit = (info) => listeners.forEach((fn) => fn(info));
 
-export const live = { status: null, statusAt: 0, error: null, catchingUp: false, pages: 0, coverageThroughAt: null };
+export const live = { status: null, statusAt: 0, error: null, catchingUp: false, pages: 0, coverageThroughAt: null, runsFreshness: null, installationId: null, crawledAt: 0 };
 
 async function getJSON(url, opts = {}) {
   const res = await fetch(url, { headers: { accept: 'application/json' }, ...opts });
@@ -115,6 +115,13 @@ export function catchUp() {
     const today = isoDay(Date.now());
     await loadDay(today);
     live.catchingUp = true;
+    // The snapshot cursor only works for the installation it came from. After a re-deploy the API
+    // answers 400 invalid_cursor, so check /v1/status (not rate-limited) first and skip the doomed request.
+    if (cursor && cursor === state?.cursor && index?.installationId) {
+      if (!live.status) await fetchStatus();
+      const inst = live.status?.installationId;
+      if (inst && inst !== index.installationId) cursor = null;
+    }
     let added = 0;
     try {
       for (let guard = 0; guard < 400; guard++) {
@@ -124,11 +131,15 @@ export function catchUp() {
         try { page = await getJSON(url, { cache: 'no-store' }); }
         catch (e) {
           if (e.status === 429) { await sleep(2000); continue; }
-          if (e.status === 400 && cursor) { console.warn('cursor rejected, keeping snapshot only'); break; }
+          // The API was re-deployed (new installation): the snapshot cursor is invalid.
+          // Keep the snapshot days and read the new installation from its first page.
+          if (e.status === 400 && cursor) { console.warn('cursor rejected, restarting from the first page'); cursor = null; continue; }
           throw e;
         }
         live.pages++;
         live.coverageThroughAt = page.coverageThroughAt;
+        live.runsFreshness = page.freshness;
+        live.installationId = page.installationId;
         added += ingest(page.items);
         if (page.nextCursor) cursor = page.nextCursor;
         if (page.items.length) emit({ type: 'runs', added });
@@ -136,6 +147,7 @@ export function catchUp() {
         await sleep(PAGE_GAP_MS);
       }
       live.error = null;
+      live.crawledAt = Date.now();
     } catch (e) {
       live.error = e.message;
     } finally {
@@ -189,7 +201,8 @@ export function startLive() {
     timer = setTimeout(tick, 10_000 + Math.random() * 1000);
   };
   lastRunsPoll = Date.now();
-  catchUp();
+  // An overlay inside the Studio preview shares the runs rate limit (2 req/s) with the page around it.
+  if (window.top !== window) setTimeout(catchUp, 1500 + Math.random() * 1000); else catchUp();
   tick();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { clearTimeout(timer); tick(); } });
 }
