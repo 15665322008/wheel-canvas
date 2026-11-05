@@ -12,7 +12,7 @@ one dot-grid picture per UTC day. The same data always gives the same painting.
 > Independent community project by mstr, not affiliated with Squeekchain.
 
 <!-- SQUEEKCHAIN REPOSITORY LINE — paste the line Squeekchain gives you after submitting, here: -->
-<!-- SQUEEKCHAIN_REPO_LINE_PLACEHOLDER -->
+squeekchain-project: 902a28c9-9f31-476d-b54f-204feb873664
 
 ## Features
 
