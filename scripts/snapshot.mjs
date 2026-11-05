@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Wheel Canvas data snapshot.
+// Hamster Atelier data snapshot.
 // Pulls Squeektoshi's wheel passages from the public Squeekchain API and
 // stores them as compact per-day (UTC) JSON files in public/data/.
 // Incremental: resumes from the cursor saved in public/data/state.json.

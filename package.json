@@ -1,7 +1,7 @@
 {
-  "name": "wheel-canvas",
+  "name": "hamster-atelier",
   "version": "1.0.0",
-  "description": "Wheel Canvas / 仓鼠画布 — Squeektoshi's real wheel runs, painted as deterministic dot-grid art.",
+  "description": "Hamster Atelier · 仓鼠画坊 — Squeektoshi's real wheel runs, painted as deterministic dot-grid art.",
   "private": true,
   "type": "module",
   "license": "MIT",

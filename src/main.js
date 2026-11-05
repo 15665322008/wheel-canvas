@@ -83,7 +83,7 @@ function shell(content, active) {
   app.innerHTML = '';
   app.append(h(`
   <header class="top">
-    <a class="logo" href="#/" aria-label="Wheel Canvas home">
+    <a class="logo" href="#/" aria-label="Hamster Atelier home">
       <svg viewBox="0 0 10 10" width="28" height="28" aria-hidden="true">${logoDots()}</svg>
       <span><b>${esc(t('brand'))}</b><small>${esc(t('brandSub'))}</small></span>
     </a>
@@ -166,8 +166,8 @@ async function viewHome() {
         <button class="btn" id="dlPng">${esc(t('downloadPng'))}</button><button class="btn" id="dlSvg">${esc(t('downloadSvg'))}</button>
         <a class="btn" id="shareX" target="_blank" rel="noopener">${esc(t('shareX'))}</a>`;
     }
-    $('#dlPng').onclick = () => exportPNG(dayScene(date, getDay(date), analysis(date), {}), `wheel-canvas-${date}.png`);
-    $('#dlSvg').onclick = () => exportSVG(dayScene(date, getDay(date), analysis(date), {}), `wheel-canvas-${date}.svg`, `Wheel Canvas ${date}`);
+    $('#dlPng').onclick = () => exportPNG(dayScene(date, getDay(date), analysis(date), {}), `hamster-atelier-${date}.png`);
+    $('#dlSvg').onclick = () => exportSVG(dayScene(date, getDay(date), analysis(date), {}), `hamster-atelier-${date}.svg`, `Hamster Atelier ${date}`);
     $('#shareX').href = xIntent(t('shareDayText', { date, n: fmt(a.passages), km: fmt(a.distanceM / 1000, 2) }), siteUrl(`#/day/${date}`));
     void scene;
   };
@@ -253,8 +253,8 @@ async function viewDay(date) {
     <section class="band"><h2>${esc(t('hourly'))}</h2>${hourlyHTML(a.hours)}</section>
     <section class="band"><h2>${esc(t('runsList'))} <span class="muted">(${a.runs.length})</span></h2>${runsTable(date, a)}</section>`;
     paintDay($('#dayArt'), date, $('#dayArt').clientWidth);
-    $('#dlPng').onclick = () => exportPNG(dayScene(date, getDay(date), analysis(date), {}), `wheel-canvas-${date}.png`);
-    $('#dlSvg').onclick = () => exportSVG(dayScene(date, getDay(date), analysis(date), {}), `wheel-canvas-${date}.svg`, `Wheel Canvas ${date}`);
+    $('#dlPng').onclick = () => exportPNG(dayScene(date, getDay(date), analysis(date), {}), `hamster-atelier-${date}.png`);
+    $('#dlSvg').onclick = () => exportSVG(dayScene(date, getDay(date), analysis(date), {}), `hamster-atelier-${date}.svg`, `Hamster Atelier ${date}`);
   };
   render();
   if (date === today()) unsub = onData(throttle(render, 3000));
@@ -301,8 +301,8 @@ async function viewRun(date, idx) {
     <a class="btn primary" target="_blank" rel="noopener" href="${xIntent(t('shareRunText', { date, i: run.index, n: fmt(run.n), peak: fmt(run.peakSpeed, 2) }), siteUrl(`#/run/${date}/${run.index}`))}">${esc(t('shareX'))}</a>
   </div>`;
   drawScene($('#runArt'), scene, $('#runArt').clientWidth);
-  $('#dlPng').onclick = () => exportPNG(scene, `wheel-canvas-${date}-run${run.index}.png`);
-  $('#dlSvg').onclick = () => exportSVG(scene, `wheel-canvas-${date}-run${run.index}.svg`, `Wheel Canvas ${date} run ${run.index}`);
+  $('#dlPng').onclick = () => exportPNG(scene, `hamster-atelier-${date}-run${run.index}.png`);
+  $('#dlSvg').onclick = () => exportSVG(scene, `hamster-atelier-${date}-run${run.index}.svg`, `Hamster Atelier ${date} run ${run.index}`);
 }
 
 async function viewHow() {

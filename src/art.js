@@ -127,7 +127,7 @@ export function dayScene(date, t, a, opts = {}) {
   if (!opts.bare) {
     prims.push({ t: 'text', x: C * 1.6, y: H - C * 2.1, s: 30, fill: '#E6E6EC', txt: date, anchor: 'start', font: 'display', weight: 600 });
     prims.push({ t: 'text', x: C * 1.6, y: H - C * 0.9, s: 15, fill: '#9A9AA6', txt: `${fmtInt(a.passages)} TURNS · ${(a.distanceM / 1000).toFixed(2)} KM · ${a.runs.length} RUNS · UTC`, anchor: 'start', font: 'mono' });
-    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 2.1, s: 15, fill: '#9A9AA6', txt: `WHEEL CANVAS · ${pal.name.toUpperCase()}`, anchor: 'end', font: 'mono' });
+    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 2.1, s: 15, fill: '#9A9AA6', txt: `HAMSTER ATELIER · ${pal.name.toUpperCase()}`, anchor: 'end', font: 'mono' });
     prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 0.9, s: 15, fill: '#6E6E7A', txt: `#${a.fingerprint}`, anchor: 'end', font: 'mono' });
   }
   return { w: W, h: H, bg: opts.transparent ? null : BG, prims, palette: pal };
@@ -174,7 +174,7 @@ export function runScene(date, t, a, run, opts = {}) {
     prims.push({ t: 'text', x: C * 2, y: C * 2.3, s: 30, fill: '#E6E6EC', txt: `RUN #${run.index} · ${date}`, anchor: 'start', font: 'display', weight: 600 });
     prims.push({ t: 'text', x: W - C * 2, y: C * 2.3, s: 15, fill: '#9A9AA6', txt: `${hhmm(run.start)}–${hhmm(run.end)} UTC`, anchor: 'end', font: 'mono' });
     prims.push({ t: 'text', x: C * 2, y: H - C * 2.2, s: 15, fill: '#9A9AA6', txt: `${fmtInt(run.n)} TURNS · ${run.distanceM.toFixed(0)} M · AVG ${run.avgSpeed.toFixed(2)} M/S · PEAK ${run.peakSpeed.toFixed(2)} M/S`, anchor: 'start', font: 'mono' });
-    prims.push({ t: 'text', x: W - C * 2, y: H - C * 2.2, s: 15, fill: '#6E6E7A', txt: `WHEEL CANVAS · #${a.fingerprint}`, anchor: 'end', font: 'mono' });
+    prims.push({ t: 'text', x: W - C * 2, y: H - C * 2.2, s: 15, fill: '#6E6E7A', txt: `HAMSTER ATELIER · #${a.fingerprint}`, anchor: 'end', font: 'mono' });
   }
   return { w: W, h: H, bg: opts.transparent ? null : BG, prims, palette: pal };
 }
@@ -206,7 +206,7 @@ export function drawScene(canvas, scene, cssWidth, dprOverride) {
 }
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-export function sceneToSVG(scene, title = 'Wheel Canvas') {
+export function sceneToSVG(scene, title = 'Hamster Atelier') {
   const r1 = (x) => Math.round(x * 10) / 10;
   const out = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${scene.w} ${scene.h}" width="${scene.w}" height="${scene.h}">`, `<title>${esc(title)}</title>`];
   if (scene.bg) out.push(`<rect width="100%" height="100%" fill="${scene.bg}"/>`);
@@ -295,7 +295,7 @@ export function predictionScene(p, t, v, opts = {}) {
     const date = new Date(p.start).toISOString().slice(0, 10);
     prims.push({ t: 'text', x: C * 1.6, y: H - C * 2.1, s: 30, fill: '#E6E6EC', txt: `ROUND #${p.round} · ${date} ${hm(p.start)}–${hm(p.end)} UTC`, anchor: 'start', font: 'display', weight: 600 });
     prims.push({ t: 'text', x: C * 1.6, y: H - C * 0.9, s: 15, fill: '#9A9AA6', txt: `GUESS ${fmtInt(p.guess)} · ACTUAL ${fmtInt(p.actual)} TURNS · ${acc.toFixed(1)}%${bull ? ' · BULLSEYE' : ''}`, anchor: 'start', font: 'mono' });
-    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 2.1, s: 15, fill: '#9A9AA6', txt: `WHEEL CANVAS · PREDICTION · ${pal.name.toUpperCase()}`, anchor: 'end', font: 'mono' });
+    prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 2.1, s: 15, fill: '#9A9AA6', txt: `HAMSTER ATELIER · PREDICTION · ${pal.name.toUpperCase()}`, anchor: 'end', font: 'mono' });
     prims.push({ t: 'text', x: W - C * 1.6, y: H - C * 0.9, s: 15, fill: '#6E6E7A', txt: `#${(seed >>> 0).toString(16).padStart(8, '0')}`, anchor: 'end', font: 'mono' });
   }
   return { w: W, h: H, bg: BG, prims, palette: pal };

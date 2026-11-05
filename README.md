@@ -1,9 +1,9 @@
-# Wheel Canvas / 仓鼠画布
+# Hamster Atelier · 仓鼠画坊
 
 **Every turn of Squeektoshi's wheel paints a dot.**
 Live site: https://mstrsqueek.xyz · Source: https://github.com/15665322008/wheel-canvas
 
-Wheel Canvas turns the real wheel runs of Squeektoshi, the hamster behind
+Hamster Atelier turns the real wheel runs of Squeektoshi, the hamster behind
 [Squeekchain](https://squeekchain.com), into deterministic generative art. Each
 magnet passage the wheel sensor records is one unit of proof-of-work. This site
 reads those exact passage timestamps from the public Squeekchain API and paints

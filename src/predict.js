@@ -230,7 +230,7 @@ export async function viewPredict(ctx, args = []) {
       <div class="actions"><button class="btn" id="pPng">${esc(t('downloadPng'))}</button>
         <a class="btn primary" target="_blank" rel="noopener" href="${xIntent(t('predShareText', { round: it.round, guess: fmt(it.guess), actual: fmt(it.actual), acc: fmt(it.acc, 1) }), link)}">${esc(t('shareX'))}</a>
         <a class="btn" href="${esc(link.replace(location.origin + '/', ''))}">${esc(t('predPermalink'))}</a></div>`;
-    $('#pPng').onclick = () => exportPNG(scene, `wheel-canvas-round-${it.round}-guess-${it.guess}.png`);
+    $('#pPng').onclick = () => exportPNG(scene, `hamster-atelier-round-${it.round}-guess-${it.guess}.png`);
   }
 
   function renderHistory() {
@@ -308,5 +308,5 @@ async function viewShared(ctx, args) {
   $('#shCap').textContent = `${new Date(win.start).toISOString().slice(0, 16).replace('T', ' ')} UTC · ${scene.palette.name}`;
   $('#shSide').innerHTML = `<div class="stats stats-2">${stat(t('predTheirs'), fmt(guess))}${stat(t('predActual'), fmt(item.actual))}${stat(t('predAcc'), fmt(item.acc, 1) + '%')}${stat(t('predOff'), (guess - item.actual > 0 ? '+' : '') + fmt(guess - item.actual), item.acc >= 95 ? '🎯 ' + esc(t('predBull')) : '')}</div>
     <div class="actions"><button class="btn" id="shPng">${esc(t('downloadPng'))}</button><a class="btn primary" href="#/predict">${esc(t('predTryOwn'))}</a></div>`;
-  $('#shPng').onclick = () => exportPNG(scene, `wheel-canvas-round-${round}-guess-${guess}.png`);
+  $('#shPng').onclick = () => exportPNG(scene, `hamster-atelier-round-${round}-guess-${guess}.png`);
 }
