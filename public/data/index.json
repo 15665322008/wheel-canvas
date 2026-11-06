@@ -1,20 +1,20 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-06T06:26:57.738Z",
+ "generatedAt": "2026-11-06T19:16:40.088Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
  "installationId": "sepolia-core-sepolia-20261103",
  "coverageStartAt": "2026-11-05T02:42:55.347028Z",
- "coverageThroughAt": "2026-11-06T06:26:11.533570Z",
- "mmPerPassage": 906.9892121608369,
+ "coverageThroughAt": "2026-11-06T19:16:00.174973Z",
+ "mmPerPassage": 878,
  "lifetime": {
-  "acceptedWorkUnits": "9177",
-  "observedDistanceMm": "8323440",
+  "acceptedWorkUnits": "11048",
+  "observedDistanceMm": "9700144",
   "activeDayCount": 2,
-  "settledBlockCount": "935",
-  "settlementCount": "165",
+  "settledBlockCount": "1140",
+  "settlementCount": "242",
   "coverageBps": 10000,
   "firstObservedAt": "2026-11-03T19:50:00.000Z",
-  "settledWorkUnits": "9177"
+  "settledWorkUnits": "11048"
  },
  "records": {
   "mostWorkHalfHour": {
@@ -23,34 +23,34 @@
    "coverage": "complete"
   },
   "mostWorkUtcDay": {
-   "value": "5360",
+   "value": "7231",
    "occurredAt": "2026-11-05T12:00:00.000Z",
-   "coverage": "partial"
+   "coverage": "complete"
   },
   "maximumDailyDistanceMm": {
-   "value": "4972114",
+   "value": "6348818",
    "occurredAt": "2026-11-05T12:00:00.000Z",
-   "coverage": "partial"
+   "coverage": "complete"
   },
   "peakObservedRpmMilli": {
-   "value": "86290",
-   "occurredAt": "2026-11-06T04:54:45.408Z",
-   "coverage": "partial"
+   "value": "87707",
+   "occurredAt": "2026-11-06T06:43:51.176Z",
+   "coverage": "complete"
   },
   "peakObservedSpeedMmPerSecond": {
-   "value": "1263",
-   "occurredAt": "2026-11-06T04:54:45.408Z",
-   "coverage": "partial"
+   "value": "1283",
+   "occurredAt": "2026-11-06T06:43:51.176Z",
+   "coverage": "complete"
   },
   "longestActiveWindowMinutes": {
-   "value": "150",
+   "value": "220",
    "occurredAt": "2026-11-06T03:50:00.000Z",
-   "coverage": "partial"
+   "coverage": "complete"
   },
   "longestActiveDayStreak": {
    "value": "2",
    "occurredAt": "2026-11-04T12:00:00.000Z",
-   "coverage": "partial"
+   "coverage": "complete"
   }
  },
  "days": [
@@ -140,15 +140,15 @@
    "segments": 1866,
    "firstAt": "2026-11-05T02:42:55.347Z",
    "lastAt": "2026-11-05T06:44:03.879Z",
-   "distanceMm": 4972114
+   "distanceMm": 6348818
   },
   {
    "date": "2026-11-06",
-   "passages": 5663,
-   "segments": 2634,
+   "passages": 7231,
+   "segments": 3382,
    "firstAt": "2026-11-06T03:56:10.290Z",
-   "lastAt": "2026-11-06T06:26:07.491Z",
-   "distanceMm": null
+   "lastAt": "2026-11-06T07:20:26.573Z",
+   "distanceMm": 0
   }
  ]
 }
