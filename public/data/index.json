@@ -1,20 +1,20 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-06T19:16:40.088Z",
+ "generatedAt": "2026-11-07T05:49:17.683Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
  "installationId": "sepolia-core-sepolia-20261103",
  "coverageStartAt": "2026-11-05T02:42:55.347028Z",
- "coverageThroughAt": "2026-11-06T19:16:00.174973Z",
- "mmPerPassage": 878,
+ "coverageThroughAt": "2026-11-07T05:49:15.263829Z",
+ "mmPerPassage": 880.6695562168456,
  "lifetime": {
-  "acceptedWorkUnits": "11048",
-  "observedDistanceMm": "9700144",
-  "activeDayCount": 2,
-  "settledBlockCount": "1140",
-  "settlementCount": "242",
+  "acceptedWorkUnits": "15458",
+  "observedDistanceMm": "13613390",
+  "activeDayCount": 3,
+  "settledBlockCount": "1633",
+  "settlementCount": "305",
   "coverageBps": 10000,
   "firstObservedAt": "2026-11-03T19:50:00.000Z",
-  "settledWorkUnits": "11048"
+  "settledWorkUnits": "15458"
  },
  "records": {
   "mostWorkHalfHour": {
@@ -33,14 +33,14 @@
    "coverage": "complete"
   },
   "peakObservedRpmMilli": {
-   "value": "87707",
-   "occurredAt": "2026-11-06T06:43:51.176Z",
-   "coverage": "complete"
+   "value": "98316",
+   "occurredAt": "2026-11-07T05:09:45.041Z",
+   "coverage": "partial"
   },
   "peakObservedSpeedMmPerSecond": {
-   "value": "1283",
-   "occurredAt": "2026-11-06T06:43:51.176Z",
-   "coverage": "complete"
+   "value": "1439",
+   "occurredAt": "2026-11-07T05:09:45.041Z",
+   "coverage": "partial"
   },
   "longestActiveWindowMinutes": {
    "value": "220",
@@ -48,9 +48,9 @@
    "coverage": "complete"
   },
   "longestActiveDayStreak": {
-   "value": "2",
+   "value": "3",
    "occurredAt": "2026-11-04T12:00:00.000Z",
-   "coverage": "complete"
+   "coverage": "partial"
   }
  },
  "days": [
@@ -148,7 +148,15 @@
    "segments": 3382,
    "firstAt": "2026-11-06T03:56:10.290Z",
    "lastAt": "2026-11-06T07:20:26.573Z",
-   "distanceMm": 0
+   "distanceMm": 3913246
+  },
+  {
+   "date": "2026-11-07",
+   "passages": 4470,
+   "segments": 2089,
+   "firstAt": "2026-11-07T03:33:48.330Z",
+   "lastAt": "2026-11-07T05:49:14.531Z",
+   "distanceMm": null
   }
  ]
 }
