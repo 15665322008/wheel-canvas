@@ -1,35 +1,35 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-09T06:05:26.654Z",
+ "generatedAt": "2026-11-09T22:15:05.367Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
  "installationId": "sepolia-core-sepolia-20261103",
  "coverageStartAt": "2026-11-05T02:42:55.347028Z",
- "coverageThroughAt": "2026-11-09T06:05:00.253903Z",
- "mmPerPassage": 878,
+ "coverageThroughAt": "2026-11-09T22:15:02.893508Z",
+ "mmPerPassage": 883.7815089296562,
  "lifetime": {
-  "acceptedWorkUnits": "38745",
-  "observedDistanceMm": "34018110",
-  "activeDayCount": 5,
-  "settledBlockCount": "4332",
-  "settlementCount": "592",
+  "acceptedWorkUnits": "41155",
+  "observedDistanceMm": "36372028",
+  "activeDayCount": 6,
+  "settledBlockCount": "4537",
+  "settlementCount": "689",
   "coverageBps": 10000,
   "firstObservedAt": "2026-11-03T19:50:00.000Z",
-  "settledWorkUnits": "38745"
+  "settledWorkUnits": "40606"
  },
  "records": {
   "mostWorkHalfHour": {
-   "value": "1542",
-   "occurredAt": "2026-11-08T21:30:00.000Z",
+   "value": "1638",
+   "occurredAt": "2026-11-09T21:30:00.000Z",
    "coverage": "complete"
   },
   "mostWorkUtcDay": {
-   "value": "10152",
-   "occurredAt": "2026-11-07T12:00:00.000Z",
+   "value": "10263",
+   "occurredAt": "2026-11-08T12:00:00.000Z",
    "coverage": "complete"
   },
   "maximumDailyDistanceMm": {
-   "value": "8913456",
-   "occurredAt": "2026-11-07T12:00:00.000Z",
+   "value": "9010914",
+   "occurredAt": "2026-11-08T12:00:00.000Z",
    "coverage": "complete"
   },
   "peakObservedRpmMilli": {
@@ -48,7 +48,7 @@
    "coverage": "complete"
   },
   "longestActiveDayStreak": {
-   "value": "5",
+   "value": "6",
    "occurredAt": "2026-11-04T12:00:00.000Z",
    "coverage": "partial"
   }
@@ -164,15 +164,15 @@
    "segments": 7295,
    "firstAt": "2026-11-08T00:39:03.383Z",
    "lastAt": "2026-11-08T23:59:59.880Z",
-   "distanceMm": 8815120
+   "distanceMm": 9010914
   },
   {
    "date": "2026-11-09",
-   "passages": 3913,
-   "segments": 1828,
+   "passages": 6594,
+   "segments": 3034,
    "firstAt": "2026-11-09T00:00:00.846Z",
-   "lastAt": "2026-11-09T04:25:10.060Z",
-   "distanceMm": null
+   "lastAt": "2026-11-09T22:15:02.727Z",
+   "distanceMm": 2158124
   }
  ]
 }
