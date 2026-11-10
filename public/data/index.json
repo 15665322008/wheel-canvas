@@ -1,20 +1,20 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-09T22:15:05.367Z",
+ "generatedAt": "2026-11-10T07:06:12.377Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
  "installationId": "sepolia-core-sepolia-20261103",
  "coverageStartAt": "2026-11-05T02:42:55.347028Z",
- "coverageThroughAt": "2026-11-09T22:15:02.893508Z",
- "mmPerPassage": 883.7815089296562,
+ "coverageThroughAt": "2026-11-10T07:06:00.121004Z",
+ "mmPerPassage": 878,
  "lifetime": {
-  "acceptedWorkUnits": "41155",
-  "observedDistanceMm": "36372028",
+  "acceptedWorkUnits": "48609",
+  "observedDistanceMm": "42678702",
   "activeDayCount": 6,
-  "settledBlockCount": "4537",
-  "settlementCount": "689",
+  "settledBlockCount": "5376",
+  "settlementCount": "743",
   "coverageBps": 10000,
   "firstObservedAt": "2026-11-03T19:50:00.000Z",
-  "settledWorkUnits": "40606"
+  "settledWorkUnits": "48609"
  },
  "records": {
   "mostWorkHalfHour": {
@@ -168,11 +168,19 @@
   },
   {
    "date": "2026-11-09",
-   "passages": 6594,
-   "segments": 3034,
+   "passages": 9295,
+   "segments": 4356,
    "firstAt": "2026-11-09T00:00:00.846Z",
-   "lastAt": "2026-11-09T22:15:02.727Z",
-   "distanceMm": 2158124
+   "lastAt": "2026-11-09T23:22:48.275Z",
+   "distanceMm": 8464798
+  },
+  {
+   "date": "2026-11-10",
+   "passages": 4482,
+   "segments": 1991,
+   "firstAt": "2026-11-10T00:08:04.871Z",
+   "lastAt": "2026-11-10T04:57:44.711Z",
+   "distanceMm": null
   }
  ]
 }
