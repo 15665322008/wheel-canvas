@@ -1,17 +1,17 @@
 {
  "schema": "wheel-canvas.index.v1",
- "generatedAt": "2026-11-11T05:58:19.038Z",
+ "generatedAt": "2026-11-11T19:30:50.340Z",
  "source": "https://api.squeekchain.com/v1/measurement/runs",
  "installationId": "sepolia-core-sepolia-20261103",
  "coverageStartAt": "2026-11-05T02:42:55.347028Z",
- "coverageThroughAt": "2026-11-11T05:58:00.089717Z",
+ "coverageThroughAt": "2026-11-11T19:30:02.691993Z",
  "mmPerPassage": 878,
  "lifetime": {
   "acceptedWorkUnits": "54993",
   "observedDistanceMm": "48283854",
   "activeDayCount": 7,
   "settledBlockCount": "6014",
-  "settlementCount": "880",
+  "settlementCount": "961",
   "coverageBps": 10000,
   "firstObservedAt": "2026-11-03T19:50:00.000Z",
   "settledWorkUnits": "54993"
@@ -50,7 +50,7 @@
   "longestActiveDayStreak": {
    "value": "7",
    "occurredAt": "2026-11-04T12:00:00.000Z",
-   "coverage": "partial"
+   "coverage": "complete"
   }
  },
  "days": [
@@ -188,7 +188,7 @@
    "segments": 1370,
    "firstAt": "2026-11-11T00:01:20.127Z",
    "lastAt": "2026-11-11T03:45:04.300Z",
-   "distanceMm": null
+   "distanceMm": 0
   }
  ]
 }
